@@ -1,5 +1,5 @@
 
-# <img src="https://christop406.github.io/logo.svg" alt="Logo Image" style="width: 100px"> CoffeeStats
+# <img src="https://christop406.github.io/logo.svg" alt="Logo Image" width="100px" height="100px"> CoffeeStats
 The *Easy* Statistics Library for Java
 ---
 ## The Goal
