@@ -1,5 +1,6 @@
-# CoffeeStats
-## The *Easy* Statistics Library for Java
+
+# <img src="https://christop406.github.io/logo.svg" alt="Logo Image" style="width: 100px"> CoffeeStats
+The *Easy* Statistics Library for Java
 ---
 ## The Goal
 To create a library that's easy to use for developers to run statistical functions, with simple-to-use components and easy-to-remember functions.
