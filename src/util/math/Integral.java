@@ -1,5 +1,7 @@
 package util.math;
 
+import com.sun.istack.internal.Nullable;
+
 /**
  * Created by Chris on 2/24/2017.
  */
@@ -8,14 +10,23 @@ public class Integral {
     private CSFunction function;
     private double lowerBound;
     private double upperBound;
-
-    private int currentStep;
+    private double answer;
+    private int divisions;
 
     public Integral() {
-        function = null;
-        lowerBound = 0;
-        upperBound = 0;
-        currentStep = 0;
+        this(null, 0, 10);
+    }
+
+    public Integral(@Nullable CSFunction f, double lb, double ub) {
+        this(f, lb, ub, 1000);
+    }
+
+    public Integral(@Nullable CSFunction f, double lb, double ub, int divs) {
+        this.function = f;
+        this.lowerBound = lb;
+        this.upperBound = ub;
+        this.answer = 0;
+        this.divisions = divs;
     }
 
     public void setFunction(CSFunction f) {
@@ -30,22 +41,42 @@ public class Integral {
         this.upperBound = upperBound;
     }
 
-    public double calculate() {
-        if(upperBound - lowerBound < 0.5) throw new IntegrationRangeTooSmallException(upperBound, lowerBound);
-        return calculateIntegral();
+    public void setDivisions(int d) {
+        this.divisions = d;
     }
 
-    private double calculateIntegral() {
-        double stepSize = 0.5;
-        for(double i = lowerBound ; i < upperBound ; i += stepSize) {
+    public int getDivisions() {
+        return divisions;
+    }
 
+    public double getAnswer() {
+        return answer;
+    }
+
+    public void calculate() {
+        if(upperBound - lowerBound < 1) throw new IntegrationRangeTooSmallException(upperBound, lowerBound);
+        if(function == null) throw new InvalidFunctionException("Function cannot be null.");
+        calculateIntegral(this.divisions);
+    }
+
+    private void calculateIntegral(int divisions) {
+        double stepSize = (upperBound - lowerBound) / (double) divisions;
+        double sum = 0;
+        for(double i = lowerBound ; i <= upperBound ; i += stepSize) {
+            sum += ((function.calculate(i) + function.calculate(i + stepSize))/2)*stepSize;
         }
-        return 0.0;
+        answer = sum;
     }
 }
 
 class IntegrationRangeTooSmallException extends RuntimeException {
     public IntegrationRangeTooSmallException(double upperBound, double lowerBound) {
-        super(String.format("Upper bound %.1f and lower bound %.1f must be at least 0.5 apart.", upperBound, lowerBound));
+        super(String.format("Lower bound %.1f and upper bound %.1f must be at least 1 apart.", lowerBound, upperBound));
+    }
+}
+
+class InvalidFunctionException extends RuntimeException {
+    public InvalidFunctionException(String msg) {
+        super(msg);
     }
 }
